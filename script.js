@@ -187,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFAQ();
     initContactForm();
     initNewsletterForm();
+    initGoldStockTicker();
     
     // Add loading animation
     document.body.classList.add('loaded');
@@ -306,6 +307,48 @@ function initNewsletterForm() {
                 button.disabled = false;
             }, 1500);
         });
+    }
+}
+
+// Live Gold Stock Ticker
+function initGoldStockTicker() {
+    const priceElement = document.querySelector('.price');
+    const changeElement = document.querySelector('.change');
+    const timeElement = document.querySelector('.stock-time');
+    
+    if (priceElement && changeElement && timeElement) {
+        // Simulate live gold price updates
+        setInterval(() => {
+            // Generate realistic price fluctuations
+            const currentPrice = parseFloat(priceElement.textContent.replace('$', ''));
+            const fluctuation = (Math.random() - 0.5) * 20; // ±$10 fluctuation
+            const newPrice = currentPrice + fluctuation;
+            
+            // Calculate change
+            const change = newPrice - 2089.45; // Base price
+            const changePercent = (change / 2089.45) * 100;
+            
+            // Update price
+            priceElement.textContent = `$${newPrice.toFixed(2)}`;
+            
+            // Update change
+            const changeText = change >= 0 ? `+$${change.toFixed(2)}` : `-$${Math.abs(change).toFixed(2)}`;
+            const percentText = change >= 0 ? `+${changePercent.toFixed(2)}%` : `${changePercent.toFixed(2)}%`;
+            changeElement.textContent = `${changeText} (${percentText})`;
+            
+            // Update change color
+            changeElement.className = `change ${change >= 0 ? 'positive' : 'negative'}`;
+            
+            // Update time
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            timeElement.innerHTML = `Updated: ${timeString} EST`;
+            
+        }, 30000); // Update every 30 seconds
     }
 }
 
